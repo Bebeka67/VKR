@@ -11,12 +11,110 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Автоматизированный поиск пути</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QDMapView" name="DMapView">
+      <widget class="QDMapNet" name="ObjNet">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>280</y>
+         <width>100</width>
+         <height>80</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QDMapObj" name="MapObj1">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>250</y>
+         <width>100</width>
+         <height>80</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QDMapObj" name="MapObj2">
+       <property name="geometry">
+        <rect>
+         <x>460</x>
+         <y>250</y>
+         <width>100</width>
+         <height>80</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="ActionOpenMap"/>
+    <addaction name="ActionCloseMap"/>
+    <addaction name="separator"/>
+    <addaction name="ActionAppendSitNet"/>
+    <addaction name="separator"/>
+    <addaction name="ActionExit"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="ActionOpenMap">
+   <property name="text">
+    <string>Открыть карту</string>
+   </property>
+  </action>
+  <action name="ActionCloseMap">
+   <property name="text">
+    <string>Закрыть карту</string>
+   </property>
+  </action>
+  <action name="ActionExit">
+   <property name="text">
+    <string>Выход</string>
+   </property>
+  </action>
+  <action name="ActionAppendSitNet">
+   <property name="text">
+    <string>Добавить карту Sit</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QDMapView</class>
+   <extends>QWidget</extends>
+   <header>qdmcmp.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QDMapObj</class>
+   <extends>QWidget</extends>
+   <header>qdmobj.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QDMapNet</class>
+   <extends>QWidget</extends>
+   <header>qdmnet.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
