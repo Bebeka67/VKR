@@ -3,6 +3,8 @@
 
 #include "ui_mainwindow.h"
 
+#define ID_GETSHORTWAY 0
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -17,11 +19,16 @@ public:
 
 
 public slots:
+
+    void MapView_SignalMouseRelease(int,int,int);
+
     void MapOpenAction_activated();
     void MapCloseAction_activated();
     void MapAppendSitAction_activated();
 
     void ExitAction_activated();
+
+    void GetShortWayAction_activated();
 
 public:
 
@@ -43,5 +50,6 @@ private:
     QDMapObj* MapObj2;
 
     void runSetupMaps();
+
 };
 #endif // MAINWINDOW_H

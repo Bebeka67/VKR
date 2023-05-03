@@ -32,10 +32,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     // создаем коннекты для связи интерфейса и задника
 
+    connect(MapView,                &QDMapView::SignalMouseRelease, this, &MainWindow::MapView_SignalMouseRelease);
+
     connect(ui.ActionOpenMap,       &QAction::triggered, this, &MainWindow::MapOpenAction_activated);
     connect(ui.ActionCloseMap,      &QAction::triggered, this, &MainWindow::MapCloseAction_activated);
     connect(ui.ActionAppendSitNet,  &QAction::triggered, this, &MainWindow::MapAppendSitAction_activated);
     connect(ui.ActionExit,          &QAction::triggered, this, &MainWindow::ExitAction_activated);
+
+    connect(ui.ActionGetShortWay,   &QAction::triggered, this, &MainWindow::GetShortWayAction_activated);
+
 
     runSetupMaps();
 }
@@ -71,6 +76,56 @@ void MainWindow::closeEvent(QCloseEvent *e)
   MapView->SetMapActive(FALSE);
 
   return QMainWindow::closeEvent(e);
+}
+
+void MainWindow::MapView_SignalMouseRelease(int x, int y, int mod)
+{
+    if(!MapView->GetMapHandle()) return;
+
+    int left = 0;
+    int top = 0;
+    int ret = 0;
+
+    DOUBLEPOINT dpoint;
+
+    MapView->GetMapLeftTop(&left, &top);
+
+    dpoint.X = left + x;
+    dpoint.Y = top + y;
+    MapView->ConvertMetric(&dpoint.X, &dpoint.Y, PP_PICTURE, PP_PLANE);
+
+
+    switch (CurrentRegime) {
+    case ID_GETSHORTWAY:
+    {
+        if(hObj1 == 0)
+        {
+            if(ObjNet->GetNodeByPoint(MapObj1->VarObjHandle, &dpoint) != 0)
+            {
+                MapObj1->SetStyle(QDMapObj::OS_SELECT);
+                hObj1 = MapObj1->VarObjHandle;
+            }
+        }
+        else
+        {
+            if(hObj2 == 0)
+            {
+                if(ObjNet->GetNodeByPoint(MapObj2->VarObjHandle, &dpoint) != 0)
+                {
+                    MapObj2->SetStyle(QDMapObj::OS_SELECT);
+                    hObj2 = MapObj2->VarObjHandle;
+
+                }
+            }
+        }
+
+        break;
+    }
+    default:
+        break;
+    }
+
+
 }
 
 
@@ -143,6 +198,12 @@ void MainWindow::MapAppendSitAction_activated()
     CurrentRegime = -1;
 }
 
+void MainWindow::GetShortWayAction_activated()
+{
+    GraphButtonClick();
+    CurrentRegime = ID_GETSHORTWAY;
+    ui.statusbar->showMessage("Выбран режим поиска пути", 5000);
+}
 
 void MainWindow::GraphButtonClick()
 {
@@ -158,43 +219,36 @@ void MainWindow::GraphButtonClick()
     CurrentRegime = -1;
 }
 
-
 void MainWindow::runSetupMaps()
 {
-    qDebug("Runs");
     QString fileMapName = "/home/andpa/Desktop/common data/Data/Планы городов/Noginsk_3857/Noginsk.sit";
-    QString fileSitName = "/home/andpa/Desktop/common data/graph/Noginsk_graph_bugfix.sit";
 //    QString fileName = "/home/andpa/Desktop/common data/Data/Планы городов/Noginsk_SK42/Noginsk.sit";
-
-    // обнуляем граф и все идентификаторы
-
 
     MapView->SetMapFileName(fileMapName);
     MapView->SetMapActive(TRUE);
     MapView->SetMapVisible(TRUE);
 
-    if (FGraph != 0) ObjNet->CloseGraph(FGraph);
-    if (ObjNet->OpenGraph(MapView->GetMapHandle(), ObjNet->FHSite) == 0) return;
-    FGraph    = ObjNet->GetGraphHandle();
-    SitHandle = ObjNet->FHSite;
-
-    SitHandle = 0; // Идентификатор сайта графа дорог
-    hObj1     = 0;
-    hObj2     = 0;
-    CurrentRegime = -1;
-
+    if (MapView->GetMapHandle() == 0)
+    {
+        QMessageBox::critical(this, QString::fromUtf16(WS("Добавить сайт")),
+                              QString::fromUtf16(WS("Не открыта базовая карта!")),
+                              QString::fromUtf16(WS("Да")));
+        return;
+    }
+    QString fileSitName = "/home/andpa/Desktop/common data/graph/Noginsk_graph_bugfix.sit";
 
     MapView->VarMapSites->Append(MainCodec->fromUnicode(fileSitName).data());
     ObjNet->SetNetName(MainCodec->fromUnicode(fileSitName).data());
     MapView->Repaint();
 
-    qDebug("antiRuns");
+    if (FGraph != 0) ObjNet->CloseGraph(FGraph);
+    if (ObjNet->OpenGraph(MapView->GetMapHandle(), ObjNet->FHSite) == 0) return;
+    FGraph    = ObjNet->GetGraphHandle();
+    SitHandle = ObjNet->FHSite;
+    hObj1     = 0;
+    hObj2     = 0;
+    CurrentRegime = -1;
 }
-
-
-
-
-
 
 void MainWindow::ExitAction_activated()
 {

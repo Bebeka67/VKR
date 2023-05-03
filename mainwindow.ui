@@ -60,7 +60,7 @@
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="menu_file">
     <property name="title">
      <string>Файл</string>
     </property>
@@ -71,7 +71,14 @@
     <addaction name="separator"/>
     <addaction name="ActionExit"/>
    </widget>
-   <addaction name="menu"/>
+   <widget class="QMenu" name="menu_graph">
+    <property name="title">
+     <string>Граф</string>
+    </property>
+    <addaction name="ActionGetShortWay"/>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_graph"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="ActionOpenMap">
@@ -92,6 +99,11 @@
   <action name="ActionAppendSitNet">
    <property name="text">
     <string>Добавить карту Sit</string>
+   </property>
+  </action>
+  <action name="ActionGetShortWay">
+   <property name="text">
+    <string>Проложить маршрут</string>
    </property>
   </action>
  </widget>
