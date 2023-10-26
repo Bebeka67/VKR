@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent)
     MainCodec = QTextCodec::codecForName("KOI8-R");
 
     ui.setupUi(this);
+
+
     MapView = ui.DMapView;
     ObjNet = ui.ObjNet;
     MapObj1 = ui.MapObj1;
@@ -29,17 +31,19 @@ MainWindow::MainWindow(QWidget *parent)
     hObj2     = 0;
     CurrentRegime = -1;
 
+    // привязка сигналов ЮИ со слотами
 
-    // создаем коннекты для связи интерфейса и задника
+    connect(MapView, &QDMapView::SignalMouseRelease, this, &MainWindow::MapView_SignalMouseRelease);
 
-    connect(MapView,                &QDMapView::SignalMouseRelease, this, &MainWindow::MapView_SignalMouseRelease);
+    //MENU_FILE Buttons
 
-    connect(ui.ActionOpenMap,       &QAction::triggered, this, &MainWindow::MapOpenAction_activated);
-    connect(ui.ActionCloseMap,      &QAction::triggered, this, &MainWindow::MapCloseAction_activated);
-    connect(ui.ActionAppendSitNet,  &QAction::triggered, this, &MainWindow::MapAppendSitAction_activated);
-    connect(ui.ActionExit,          &QAction::triggered, this, &MainWindow::ExitAction_activated);
+    connect(ui.FileMenu_OpenMap_Button,         &QAction::triggered, this, &MainWindow::FileMenu_OpenMap_Button_clicked);
+    connect(ui.FileMenu_CloseMap_Button,        &QAction::triggered, this, &MainWindow::FileMenu_CloseMap_Button_clicked);
+    connect(ui.FileMenu_AppendSitNet_Button,    &QAction::triggered, this, &MainWindow::FileMenu_AppendSitNet_Button_clicked);
+    connect(ui.FileMenu_Exit_Button,            &QAction::triggered, this, &MainWindow::FileMenu_Exit_Button_clicked);
 
-    connect(ui.ActionGetShortWay,   &QAction::triggered, this, &MainWindow::GetShortWayAction_activated);
+    connect(ui.GraphMenu_GetShortWay_Button,    &QAction::triggered, this, &MainWindow::GraphMenu_GetShortWay_Button_clicked);
+
 
 
     runSetupMaps();
@@ -78,8 +82,9 @@ void MainWindow::closeEvent(QCloseEvent *e)
   return QMainWindow::closeEvent(e);
 }
 
-void MainWindow::MapView_SignalMouseRelease(int x, int y, int mod)
+void MainWindow::MapView_SignalMouseRelease(int mouseX,int mouseY, int additional_key)
 {
+    Q_UNUSED(additional_key);
     if(!MapView->GetMapHandle()) return;
 
     int left = 0;
@@ -90,8 +95,8 @@ void MainWindow::MapView_SignalMouseRelease(int x, int y, int mod)
 
     MapView->GetMapLeftTop(&left, &top);
 
-    dpoint.X = left + x;
-    dpoint.Y = top + y;
+    dpoint.X = left + mouseX;
+    dpoint.Y = top + mouseY;
     MapView->ConvertMetric(&dpoint.X, &dpoint.Y, PP_PICTURE, PP_PLANE);
 
 
@@ -114,7 +119,6 @@ void MainWindow::MapView_SignalMouseRelease(int x, int y, int mod)
                 {
                     MapObj2->SetStyle(QDMapObj::OS_SELECT);
                     hObj2 = MapObj2->VarObjHandle;
-
                 }
             }
         }
@@ -129,10 +133,13 @@ void MainWindow::MapView_SignalMouseRelease(int x, int y, int mod)
 }
 
 
-void MainWindow::MapOpenAction_activated()
+void MainWindow::FileMenu_OpenMap_Button_clicked()
 {
     // Выбрать имя файла  TODO добавить директорию с исходниками в собранную версию
-    QString fileName = QFileDialog::getOpenFileName(this, "Выберите базовую карту", "/home/andpa/Desktop/common data", "Sites (*.sit);; Maps (*.map)");
+    QString fileName = QFileDialog::getOpenFileName(this,                       // widget parent
+                                                    "Выберите базовую карту",   // title
+                                                    QDir::currentPath(),
+                                                    "Sites (*.sit);; Maps (*.map)");
 
     if(fileName.isEmpty())
         return; // карта не выбрана
@@ -149,12 +156,12 @@ void MainWindow::MapOpenAction_activated()
     hObj2     = 0;
     CurrentRegime = -1;
 
-
     MapView->SetMapFileName(fileName);
     MapView->SetMapActive(TRUE);
     MapView->SetMapVisible(TRUE);
 }
-void MainWindow::MapCloseAction_activated()
+
+void MainWindow::FileMenu_CloseMap_Button_clicked()
 {
     if  (FGraph != 0)
     {
@@ -162,7 +169,7 @@ void MainWindow::MapCloseAction_activated()
       FGraph = 0;
     }
 
-    SitHandle = 0; // Идентификатор сайта графа дорог
+    SitHandle = 0; // Идентификатор графа дорог
     hObj1     = 0;
     hObj2     = 0;
     CurrentRegime = -1;
@@ -170,7 +177,8 @@ void MainWindow::MapCloseAction_activated()
     MapView->SetMapVisible(FALSE);
     MapView->SetMapActive(FALSE);
 }
-void MainWindow::MapAppendSitAction_activated()
+
+void MainWindow::FileMenu_AppendSitNet_Button_clicked()
 {
     if (MapView->GetMapHandle() == 0)
     {
@@ -181,7 +189,7 @@ void MainWindow::MapAppendSitAction_activated()
     }
 
     // Выбрать имя файла
-    QString FileName = QFileDialog::getOpenFileName(this, "Выберите граф дорог", "/home/andpa/Desktop/common data/graph", QString::fromUtf16(WS("Файл карты с сетью (*.sit)")));
+    QString FileName = QFileDialog::getOpenFileName(this, "Выберите граф дорог", QDir::currentPath(), QString::fromUtf16(WS("Файл карты с графом дорог (*.sit)")));
 
     if (FileName.isEmpty()) return; // Если карта не выбрана
 
@@ -198,7 +206,7 @@ void MainWindow::MapAppendSitAction_activated()
     CurrentRegime = -1;
 }
 
-void MainWindow::GetShortWayAction_activated()
+void MainWindow::GraphMenu_GetShortWay_Button_clicked()
 {
     GraphButtonClick();
     CurrentRegime = ID_GETSHORTWAY;
@@ -221,7 +229,7 @@ void MainWindow::GraphButtonClick()
 
 void MainWindow::runSetupMaps()
 {
-    QString fileMapName = "/home/andpa/Desktop/common data/Data/Планы городов/Noginsk_3857/Noginsk.sit";
+    QString fileMapName = source_path + "Noginsk/Noginsk.sit";//"/home/andpa/Desktop/common data/Data/Планы городов/Noginsk_3857/Noginsk.sit";
 //    QString fileName = "/home/andpa/Desktop/common data/Data/Планы городов/Noginsk_SK42/Noginsk.sit";
 
     MapView->SetMapFileName(fileMapName);
@@ -235,7 +243,8 @@ void MainWindow::runSetupMaps()
                               QString::fromUtf16(WS("Да")));
         return;
     }
-    QString fileSitName = "/home/andpa/Desktop/common data/graph/Noginsk_graph_bugfix.sit";
+
+    QString fileSitName = source_path+"graph/Noginsk_graph_bugfix.sit";// "/home/andpa/Desktop/common data/graph/Noginsk_graph_bugfix.sit";
 
     MapView->VarMapSites->Append(MainCodec->fromUnicode(fileSitName).data());
     ObjNet->SetNetName(MainCodec->fromUnicode(fileSitName).data());
@@ -250,7 +259,7 @@ void MainWindow::runSetupMaps()
     CurrentRegime = -1;
 }
 
-void MainWindow::ExitAction_activated()
+void MainWindow::FileMenu_Exit_Button_clicked()
 {
     close();
 }

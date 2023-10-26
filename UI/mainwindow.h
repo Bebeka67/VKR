@@ -5,6 +5,10 @@
 
 #define ID_GETSHORTWAY 0
 
+
+
+
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -17,18 +21,18 @@ public:
 
     void GraphButtonClick();
 
-
 public slots:
 
-    void MapView_SignalMouseRelease(int,int,int);
+    void MapView_SignalMouseRelease(int mouseX,int mouseY, int additional_key);
 
-    void MapOpenAction_activated();
-    void MapCloseAction_activated();
-    void MapAppendSitAction_activated();
 
-    void ExitAction_activated();
+    void FileMenu_OpenMap_Button_clicked();
+    void FileMenu_CloseMap_Button_clicked();
+    void FileMenu_AppendSitNet_Button_clicked();
+    void FileMenu_Exit_Button_clicked();
 
-    void GetShortWayAction_activated();
+    void GraphMenu_GetShortWay_Button_clicked();
+
 
 public:
 
@@ -36,11 +40,17 @@ public:
 
     HGRAPH FGraph;
     HSITE SitHandle;
+
+
+
     HOBJ hObj1;
     HOBJ hObj2;
-    int CurrentRegime;
-    QTextCodec *MainCodec;
 
+
+    int CurrentRegime;
+
+
+    QTextCodec *MainCodec;
 
 private:
 
@@ -51,5 +61,14 @@ private:
 
     void runSetupMaps();
 
+
+
+
+
+
+
+
+
+    QString source_path = "/home/andrey/Projects/Source/";
 };
 #endif // MAINWINDOW_H

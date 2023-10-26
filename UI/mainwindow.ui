@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1200</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Автоматизированный поиск пути</string>
+   <string>Pathfinder</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -56,7 +56,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1200</width>
      <height>22</height>
     </rect>
    </property>
@@ -64,44 +64,44 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="ActionOpenMap"/>
-    <addaction name="ActionCloseMap"/>
+    <addaction name="FileMenu_OpenMap_Button"/>
+    <addaction name="FileMenu_CloseMap_Button"/>
     <addaction name="separator"/>
-    <addaction name="ActionAppendSitNet"/>
+    <addaction name="FileMenu_AppendSitNet_Button"/>
     <addaction name="separator"/>
-    <addaction name="ActionExit"/>
+    <addaction name="FileMenu_Exit_Button"/>
    </widget>
    <widget class="QMenu" name="menu_graph">
     <property name="title">
      <string>Граф</string>
     </property>
-    <addaction name="ActionGetShortWay"/>
+    <addaction name="GraphMenu_GetShortWay_Button"/>
    </widget>
    <addaction name="menu_file"/>
    <addaction name="menu_graph"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="ActionOpenMap">
+  <action name="FileMenu_OpenMap_Button">
    <property name="text">
     <string>Открыть карту</string>
    </property>
   </action>
-  <action name="ActionCloseMap">
+  <action name="FileMenu_CloseMap_Button">
    <property name="text">
     <string>Закрыть карту</string>
    </property>
   </action>
-  <action name="ActionExit">
+  <action name="FileMenu_Exit_Button">
    <property name="text">
     <string>Выход</string>
    </property>
   </action>
-  <action name="ActionAppendSitNet">
+  <action name="FileMenu_AppendSitNet_Button">
    <property name="text">
     <string>Добавить карту Sit</string>
    </property>
   </action>
-  <action name="ActionGetShortWay">
+  <action name="GraphMenu_GetShortWay_Button">
    <property name="text">
     <string>Проложить маршрут</string>
    </property>

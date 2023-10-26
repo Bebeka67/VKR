@@ -41,9 +41,13 @@ unix:INCLUDEPATH	+= $(GISDESIGNER_ROOT)/usr/include/gisdesigner
 unix:LIBS	+= -L$(GISDESIGNER_ROOT)/usr/lib -lqdmapacces -lmapcomponents -ldl
 LANGUAGE	= C++
 
-FORMS	= mainwindow.ui
-
 SOURCES	+= main.cpp \
-           mainwindow.cpp
+    UI/mainwindow.cpp \
+    pathfinder.cpp
 
-HEADERS	+= mainwindow.h
+FORMS += \
+    UI/mainwindow.ui
+
+HEADERS += \
+    UI/mainwindow.h \
+    pathfinder.h
