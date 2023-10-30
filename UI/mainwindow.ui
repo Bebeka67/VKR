@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Pathfinder</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QDMapView" name="DMapView">
+      <widget class="QDMapNet" name="ObjNet">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>280</y>
+         <width>100</width>
+         <height>80</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QDMapObj" name="MapObj1">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>250</y>
+         <width>100</width>
+         <height>80</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QDMapObj" name="MapObj2">
+       <property name="geometry">
+        <rect>
+         <x>460</x>
+         <y>250</y>
+         <width>100</width>
+         <height>80</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1200</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="FileMenu_OpenMap_Button"/>
+    <addaction name="FileMenu_CloseMap_Button"/>
+    <addaction name="separator"/>
+    <addaction name="FileMenu_AppendSitNet_Button"/>
+    <addaction name="separator"/>
+    <addaction name="FileMenu_Exit_Button"/>
+   </widget>
+   <widget class="QMenu" name="menu_graph">
+    <property name="title">
+     <string>Граф</string>
+    </property>
+    <addaction name="GraphMenu_GetShortWay_Button"/>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_graph"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="FileMenu_OpenMap_Button">
+   <property name="text">
+    <string>Открыть карту</string>
+   </property>
+  </action>
+  <action name="FileMenu_CloseMap_Button">
+   <property name="text">
+    <string>Закрыть карту</string>
+   </property>
+  </action>
+  <action name="FileMenu_Exit_Button">
+   <property name="text">
+    <string>Выход</string>
+   </property>
+  </action>
+  <action name="FileMenu_AppendSitNet_Button">
+   <property name="text">
+    <string>Добавить карту Sit</string>
+   </property>
+  </action>
+  <action name="GraphMenu_GetShortWay_Button">
+   <property name="text">
+    <string>Проложить маршрут</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QDMapView</class>
+   <extends>QWidget</extends>
+   <header>qdmcmp.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QDMapObj</class>
+   <extends>QWidget</extends>
+   <header>qdmobj.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QDMapNet</class>
+   <extends>QWidget</extends>
+   <header>qdmnet.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
